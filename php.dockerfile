@@ -46,14 +46,10 @@ RUN apk add --no-cache \
     zlib-dev
 
 # Install PECL and PEAR extensions
-RUN pecl install \
-    redis \
-    imagick \
+RUN pecl install redis
 
 # Enable PECL and PEAR extensions
-RUN docker-php-ext-enable \
-    redis \
-    imagick \
+RUN docker-php-ext-enable redis
 
 # Configure php extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
