@@ -17,13 +17,12 @@ Three additional containers are included that handle Composer, NPM, and Artisan 
 - `docker-compose exec app composer install`
 - `docker-compose exec app php artisan key:generate`
 
-For production
+## Production
 
-step 1: prepare app image via app.dockerfile
-step 2: prepare web image via web.dockerfile
+#### Step 1: prepare app image via app.dockerfile
+#### Step 2: prepare web image via web.dockerfile
 
 - `docker-compose -f docker-compose.production.yml up -d --build`
 
-docker run watchtower
 watchtower will restart container if app or web image update.
 
