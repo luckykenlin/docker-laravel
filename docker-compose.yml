@@ -19,7 +19,7 @@ services:
     app:
         build:
             context: .
-            dockerfile: docker/php.dockerfile
+            dockerfile: docker/php/dev.dockerfile
         depends_on:
             - db
         volumes:
