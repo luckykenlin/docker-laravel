@@ -27,7 +27,7 @@ services:
             - ./docker/php/php-dev.ini:/usr/local/etc/php/conf.d/php.ini:ro
 
     # --- nginx
-    nginx:
+    web:
         image: bitnami/nginx:1.19
         ports:
             - "80:8080"

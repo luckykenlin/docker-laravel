@@ -32,7 +32,7 @@ services:
       - ./.env.production:/app/.env
 
   # --- nginx
-  nginx:
+  web:
     image: laravel-web
     restart: unless-stopped
     ports:
