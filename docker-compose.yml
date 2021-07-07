@@ -1,50 +1,50 @@
 version: '3.9'
 
 services:
-  # --- MariaDB
-  db:
-    image: mariadb:10.5
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
-    environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_USER=${DB_USERNAME}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
-      - MYSQL_DATABASE=${DB_DATABASE}
-    ports:
-      - "127.0.0.1:3306:3306"
-    volumes:
-      - mysql_db:/var/lib/mysql
+    # --- MariaDB
+    db:
+        image: mariadb:10.5
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
+        environment:
+            - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+            - MYSQL_USER=${DB_USERNAME}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
+            - MYSQL_DATABASE=${DB_DATABASE}
+        ports:
+            - "127.0.0.1:3306:3306"
+        volumes:
+            - mysql_db:/var/lib/mysql
 
-  # --- PHP 7.4
-  app:
-    build:
-      context: .
-      dockerfile: php.dockerfile
-    depends_on:
-      - db
-    volumes:
-      - .:/app
-      - ./docker/php/php-dev.ini:/usr/local/etc/php/conf.d/php.ini:ro
+    # --- PHP 7.4
+    app:
+        build:
+            context: .
+            dockerfile: docker/php.dockerfile
+        depends_on:
+            - db
+        volumes:
+            - .:/app
+            - ./docker/php/php-dev.ini:/usr/local/etc/php/conf.d/php.ini:ro
 
-  # --- nginx
-  nginx:
-    image: bitnami/nginx:1.19
-    ports:
-      - "80:8080"
-    depends_on:
-      - app
-    volumes:
-      - .:/app
-      - ./docker/nginx/dev.conf:/opt/bitnami/nginx/conf/server_blocks/ldp365.conf:ro
+    # --- nginx
+    nginx:
+        image: bitnami/nginx:1.19
+        ports:
+            - "80:8080"
+        depends_on:
+            - app
+        volumes:
+            - .:/app
+            - ./docker/nginx/dev.conf:/opt/bitnami/nginx/conf/server_blocks/default.conf:ro
 
-  # --- Redis
-  redis:
-    image: bitnami/redis:6.0
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-    ports:
-      - "127.0.0.1:6379:6379"
+    # --- Redis
+    redis:
+        image: bitnami/redis:6.0
+        environment:
+            - REDIS_PASSWORD=${REDIS_PASSWORD}
+        ports:
+            - "127.0.0.1:6379:6379"
 
 volumes:
-  mysql_db:
-    driver: local
+    mysql_db:
+        driver: local

@@ -17,4 +17,5 @@ RUN pecl install xdebug pcov
 RUN docker-php-ext-install bcmath pdo_mysql pdo_pgsql zip
 RUN docker-php-ext-enable xdebug pcov
 
+# Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
