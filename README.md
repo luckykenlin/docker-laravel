@@ -21,6 +21,7 @@ Three additional containers are included that handle Composer, NPM, and Artisan 
 
 #### Step 1: prepare app image via app.dockerfile
 #### Step 2: prepare web image via web.dockerfile
+#### Step 3: copy production env file rename as .env.production under root directory
 
 - `docker-compose -f docker-compose.production.yml up -d --build`
 

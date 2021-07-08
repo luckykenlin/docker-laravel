@@ -63,3 +63,10 @@ COPY --from=npm_builder /srv/public/ /app/public/
 
 # Set correct permissions for the storage directory
 RUN chmod -R 0777 /app/storage
+RUN chmod -R 0777 /app/bootstrap/cache
+
+# Optimize resources
+RUN php artisan config:cache
+RUN php artisan route:cache
+RUN php artisan view:cache
+
