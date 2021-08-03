@@ -15,11 +15,11 @@ COPY ./routes /app/routes
 COPY ./storage /app/storage
 COPY ./tests /app/tests
 
-COPY ["./artisan", "./composer.json", "./README.md", "./server.php", "/app/"]
+COPY ["./artisan", "./composer.json", "./composer.lock", "./README.md", "./server.php", "/app/"]
 COPY ./.env.production /app/.env
 
 # Install dependencies using Composer
-RUN composer install -n --prefer-dist --no-dev
+RUN composer install -n --prefer-dist --optimize-autoloader --no-dev --ignore-platform-reqs
 
 # ================================
 # Compile all assets
@@ -27,14 +27,14 @@ FROM node:14 AS npm_builder
 WORKDIR /srv
 
 COPY ./resources ./resources
-COPY ["./package.json", "./webpack.mix.js", "/srv/"]
+COPY ["./package.json", "./package-lock.json", "./webpack.mix.js", "/srv/"]
 
 RUN npm install
 RUN npm run production
 
 # ================================
 # Prepare the final image
-FROM luckykenlin/php
+FROM luckykenlin/php:8.0-fpm
 WORKDIR /app
 
 # Copy the app into the container
@@ -48,8 +48,15 @@ COPY ./routes /app/routes
 COPY ./storage /app/storage
 COPY ./tests /app/tests
 
-COPY ["./artisan", "./composer.json", "./README.md", "./package.json", "./server.php", "/app/"]
+COPY ["./artisan", "./composer.json", "./composer.lock", "./README.md", "./package.json", "./server.php", "/app/"]
 COPY ./.env.production /app/.env
+
+# Install supervisor
+RUN apk add supervisor
+
+# Configure Supervisor for horizon php-fpm
+RUN mkdir /etc/supervisor.d/
+COPY ./docker/supervisord.ini /etc/supervisor.d/supervisord.ini
 
 # Copy the PHP and nginx config files
 COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
@@ -70,3 +77,4 @@ RUN php artisan config:cache
 RUN php artisan route:cache
 RUN php artisan view:cache
 
+CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor.d/supervisord.ini"]
