@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN pecl install xdebug pcov redis
 RUN docker-php-ext-install bcmath pdo_mysql pdo_pgsql zip pcntl -j$(nproc) gd
-RUN docker-php-ext-enable xdebug pcov redis
+RUN docker-php-ext-enable xdebug pcov redis pcntl
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
 # Composer
