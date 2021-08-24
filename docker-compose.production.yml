@@ -39,6 +39,18 @@ services:
       - "DB_HOST=db"
       - "REDIS_HOST=redis"
 
+  schedule:
+    image: luckykenlin/ldp365
+    restart: always
+    command: /usr/local/etc/php/run-scheduler.sh
+    depends_on:
+      - app
+    volumes:
+      - ./.env.production:/app/.env
+    environment:
+      - "DB_HOST=db"
+      - "REDIS_HOST=redis"
+
   # --- nginx
   web:
     image: laravel-web
