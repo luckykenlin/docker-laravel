@@ -30,7 +30,7 @@ services:
     web:
         image: bitnami/nginx:1.19
         ports:
-            - "80:8080"
+            - "8080:8080"
         depends_on:
             - app
         volumes:

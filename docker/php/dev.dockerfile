@@ -1,29 +1,15 @@
-# DOCKERFILE DEVELOPMENT
-# Installs MySQL Client for database exports, xDebug with PCov and Composer
+# Installs MySQL Client for database exports
 
-FROM php:7.4-fpm
+FROM php:8.2-fpm-alpine
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y \
-    zip \
-    git \
-    mariadb-client \
-    autoconf \
-    build-essential \
-    libpq-dev \
-    libzip-dev \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libpng-dev \
-    autoconf \
-    gcc \
-    g++ \
-    make
+# Install nginx, reids, MySQL Dump for automated backups and other dependencies
+RUN apk update
+RUN apk add --no-cache mariadb-client postgresql postgresql-dev zip libzip-dev autoconf gcc g++ make; \
+	docker-php-ext-configure zip ; \
+	docker-php-ext-install pcntl bcmath pdo_mysql pdo_pgsql zip ;
 
-RUN pecl install xdebug pcov redis
-RUN docker-php-ext-install bcmath pdo_mysql pdo_pgsql zip pcntl -j$(nproc) gd
-RUN docker-php-ext-enable xdebug pcov redis pcntl
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN pecl install redis pcov
+RUN docker-php-ext-enable redis pcntl pcov
 
-# Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

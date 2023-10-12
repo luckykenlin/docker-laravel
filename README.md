@@ -29,4 +29,3 @@ Use the following command examples from your project root, modifying them to fit
 - `docker-compose -f docker-compose.production.yml up -d --build`
 
 watchtower will restart container if app or web image update.
-
